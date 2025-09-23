@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   RiMenu2Fill,
@@ -162,24 +162,24 @@ const Navbar = () => {
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
               >
-                <a
-                  href={item.link}
+                <Link
+                  to={item.link}
                   className="hover:text-[#0EA5E9] cursor-pointer block transition"
                 >
                   {item.name}
-                </a>
+                </Link>
 
                 {/* Animated Dropdown */}
                 {hoveredIndex === index && item.children?.length > 0 && (
                   <div className="absolute top-full left-0  w-48 bg-black py-4 text-white rounded shadow z-20 animate-fadeInSlide">
                     {item.children.map((child) => (
-                      <a
+                      <Link
                         key={child.name}
-                        href={child.link}
+                        to={child.link}
                         className="block px-4 py-2 text-sm hover:bg-gray-700 transition"
                       >
                         {child.name}
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 )}
@@ -189,12 +189,12 @@ const Navbar = () => {
           <div className="relative flex gap-6 text-lg text-white uppercase">
             {PremenuItems.map((item) => (
               <div key={item.name} className="relative">
-                <a
-                  href={item.link}
+                <Link
+                  to={item.link}
                   className="hover:text-[#0EA5E9] cursor-pointer block transition"
                 >
                   {item.name}
-                </a>
+                </Link>
               </div>
             ))}
           </div>
@@ -303,7 +303,7 @@ const Navbar = () => {
               className="flex justify-between items-center cursor-pointer"
               onClick={() => toggleSubMenu(index)}
             >
-              <a href={item.link}>{item.name}</a>
+              <Link to={item.link}>{item.name}</Link>
               {item.children?.length > 0 && (
                 <span
                   className={`transform transition-transform duration-200 text-sm ${
@@ -318,13 +318,13 @@ const Navbar = () => {
             {/* Subcategories */}
             {openSubIndex === index &&
               item.children?.map((child) => (
-                <a
+                <Link
                   key={child.name}
-                  href={child.link}
+                  to={child.link}
                   className="block text-sm text-gray-300 ml-4 mt-1"
                 >
                   {child.name}
-                </a>
+                </Link>
               ))}
           </div>
         ))}
@@ -332,9 +332,9 @@ const Navbar = () => {
         {/* Add this section for the "About Us" and "Popular" links */}
         <div className="px-4 flex flex-col gap-6 text-white text-xl uppercase py-2">
           {PremenuItems.map((item) => (
-            <a key={item.name} href={item.link}>
+            <Link key={item.name} to={item.link}>
               {item.name}
-            </a>
+            </Link>
           ))}
         </div>
       </div>
