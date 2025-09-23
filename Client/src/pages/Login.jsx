@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { RoundedOneLoader } from "../components/RoundedOneLoader";
 
@@ -107,9 +107,9 @@ const Login = () => {
 
           <p className="text-sm text-gray-500 mt-4">
             Don’t have an account?{" "}
-            <a href="/register" className="text-yellow-500 hover:underline">
+            <Link to="/register" className="text-yellow-500 hover:underline">
               Register
-            </a>
+            </Link>
           </p>
         </form>
       </div>
