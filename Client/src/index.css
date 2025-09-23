@@ -1,0 +1,239 @@
+@import url("https://fonts.googleapis.com/css2?family=Ancizar+Sans:ital,wght@0,100..1000;1,100..1000&family=Oswald:wght@200..700&family=Patrick+Hand&display=swap");
+@import "tailwindcss";
+
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  color: #2e2f2e;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Oswald", sans-serif;
+}
+
+p {
+  font-family: "Ancizar Sans", sans-serif;
+}
+
+.two-line-truncate {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.handwritten {
+  font-family: "Patrick Hand", cursive;
+}
+
+.paper-stripes {
+  background: repeating-linear-gradient(
+    to bottom,
+    #faf3e0,
+    #faf3e0 20px,
+    #e0d8b0 21px,
+    #faf3e0 22px
+  );
+  clip-path: polygon(0% 10%, 95% 5%, 100% 10%, 100% 90%, 95% 95%, 0% 100%);
+  padding: 2rem;
+  max-width: 600px;
+  margin: auto;
+  /* #faf3e0 = light cream, #e0d8b0 = light stripe */
+}
+
+.torn-paper {
+  position: relative;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 90%,
+    95% 92%,
+    90% 89%,
+    85% 94%,
+    80% 90%,
+    75% 93%,
+    70% 91%,
+    65% 94%,
+    60% 91%,
+    55% 93%,
+    50% 90%,
+    45% 92%,
+    40% 89%,
+    35% 93%,
+    30% 91%,
+    25% 94%,
+    20% 90%,
+    15% 93%,
+    10% 89%,
+    5% 91%,
+    0 90%
+  );
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); /* smooth deep shadow */
+  border-radius: 4px;
+  transition: box-shadow 0.3s ease;
+}
+
+/* Animation */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.share-slide {
+  animation: slideIn 1s ease-out forwards;
+}
+
+.social-icon {
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid white;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.social-icon:last-child {
+  border-right: none;
+}
+
+.social-icon:hover {
+  color: #000;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #f5ce35;
+  border-radius: 10px;
+}
+
+/* Admin Layout */
+@container (max-width:120px) {
+  .table-fb22a6db-ba69-4c39-8337-bde12a91d0e0-column-120 {
+    display: none;
+  }
+}
+@container (max-width:240px) {
+  .table-fb22a6db-ba69-4c39-8337-bde12a91d0e0-column-240 {
+    display: none;
+  }
+}
+@container (max-width:360px) {
+  .table-fb22a6db-ba69-4c39-8337-bde12a91d0e0-column-360 {
+    display: none;
+  }
+}
+@container (max-width:480px) {
+  .table-fb22a6db-ba69-4c39-8337-bde12a91d0e0-column-480 {
+    display: none;
+  }
+}
+
+/* Admin users */
+@container (max-width:120px) {
+  .table-178389c1-b862-445e-a508-6eb8ecb3e54c-column-120 {
+    display: none;
+  }
+}
+@container (max-width:240px) {
+  .table-178389c1-b862-445e-a508-6eb8ecb3e54c-column-240 {
+    display: none;
+  }
+}
+@container (max-width:360px) {
+  .table-178389c1-b862-445e-a508-6eb8ecb3e54c-column-360 {
+    display: none;
+  }
+}
+@container (max-width:480px) {
+  .table-178389c1-b862-445e-a508-6eb8ecb3e54c-column-480 {
+    display: none;
+  }
+}
+@container (max-width:600px) {
+  .table-178389c1-b862-445e-a508-6eb8ecb3e54c-column-600 {
+    display: none;
+  }
+}
+
+/* admin recipes */
+
+@container (max-width:56px) {
+  .table-3775ad56-80fa-4cee-8723-4936a3d9eabd-column-56 {
+    display: none;
+  }
+}
+@container (max-width:176px) {
+  .table-3775ad56-80fa-4cee-8723-4936a3d9eabd-column-176 {
+    display: none;
+  }
+}
+@container (max-width:296px) {
+  .table-3775ad56-80fa-4cee-8723-4936a3d9eabd-column-296 {
+    display: none;
+  }
+}
+@container (max-width:416px) {
+  .table-3775ad56-80fa-4cee-8723-4936a3d9eabd-column-416 {
+    display: none;
+  }
+}
+@container (max-width:536px) {
+  .table-3775ad56-80fa-4cee-8723-4936a3d9eabd-column-536 {
+    display: none;
+  }
+}
+@container (max-width:656px) {
+  .table-3775ad56-80fa-4cee-8723-4936a3d9eabd-column-656 {
+    display: none;
+  }
+}
+@container (max-width:776px) {
+  .table-3775ad56-80fa-4cee-8723-4936a3d9eabd-column-776 {
+    display: none;
+  }
+}
+
+/* Admin badges */
+
+@container (max-width:120px) {
+  .table-59ab5545-40c9-4a45-afd1-2d7361d1d94f-column-120 {
+    display: none;
+  }
+}
+@container (max-width:240px) {
+  .table-59ab5545-40c9-4a45-afd1-2d7361d1d94f-column-240 {
+    display: none;
+  }
+}
+@container (max-width:360px) {
+  .table-59ab5545-40c9-4a45-afd1-2d7361d1d94f-column-360 {
+    display: none;
+  }
+}
+@container (max-width:416px) {
+  .table-59ab5545-40c9-4a45-afd1-2d7361d1d94f-column-416 {
+    display: none;
+  }
+}
+@container (max-width:536px) {
+  .table-59ab5545-40c9-4a45-afd1-2d7361d1d94f-column-536 {
+    display: none;
+  }
+}

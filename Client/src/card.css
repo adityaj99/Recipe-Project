@@ -1,0 +1,43 @@
+.before-blur-glow::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 110%;
+  height: 110%;
+  transform: translate(-50%, -50%);
+  border-radius: 1rem;
+  z-index: -1;
+  filter: blur(20px);
+  animation: glow-pulse 5s linear infinite;
+  background: inherit;
+}
+
+@keyframes glow-pulse {
+  0% {
+    opacity: 0.3;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+/* Required to preserve 3D */
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+.group-hover\:rotate-y-180:hover .group-hover\:rotate-y-180 {
+  transform: rotateY(180deg);
+}
