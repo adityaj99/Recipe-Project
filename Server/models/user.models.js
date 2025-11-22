@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema(
     },
     tag: {
       type: String,
-      default: "",
+      default: null,
     },
 
     socials: {
