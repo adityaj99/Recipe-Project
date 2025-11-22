@@ -180,9 +180,11 @@ const Profile = () => {
               )}
             </div>
 
-            <div className="py-4 whitespace-pre-line">
-              <p>{user?.tag}</p>
-            </div>
+            {user?.tag && (
+              <div className="py-4 whitespace-pre-line">
+                <p>{user?.tag}</p>
+              </div>
+            )}
 
             <p className="text-gray-500">{user?.email}</p>
 
