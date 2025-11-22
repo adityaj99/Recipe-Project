@@ -31,7 +31,7 @@ const ProfileSetting = () => {
 
     const formData = new FormData();
     formData.append("name", name);
-    formData.append("tag", tag);
+    formData.append("tag", tag?.trim() === "" ? "" : tag);
     formData.append("socials", JSON.stringify(socials));
     if (avatar) formData.append("avatar", avatar);
 

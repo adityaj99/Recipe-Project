@@ -33,8 +33,10 @@ const updateUserProfile = async (req, res) => {
       user.name = req.body.name;
     }
 
-    if (req.body.tag) {
-      user.tag = req.body.tag;
+    if (req.body.tag !== undefined) {
+      const rawTag = req.body.tag?.trim();
+
+      user.tag = !rawTag || rawTag === "null" ? null : rawTag;
     }
 
     if (req.file) {
@@ -155,7 +157,6 @@ const getFollowersFollowingCount = async (req, res) => {
 
 const getUserById = async (req, res) => {
   try {
-
     const user = await userModel.findById(req.params.userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
