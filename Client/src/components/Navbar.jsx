@@ -42,7 +42,7 @@ const Navbar = () => {
     try {
       const data = await getNotifications();
       setNotifications(
-        data?.notifications.filter((item) => item.isRead !== true)
+        data?.notifications.filter((item) => item.isRead !== true),
       );
     } catch (error) {
       console.error(error);
@@ -122,7 +122,7 @@ const Navbar = () => {
 
       localStorage.setItem(
         "categoriesCache",
-        JSON.stringify({ timestamp: Date.now(), data: mainMenuItems })
+        JSON.stringify({ timestamp: Date.now(), data: mainMenuItems }),
       );
       setMenuItems(mainMenuItems);
     } catch (error) {
@@ -239,7 +239,8 @@ const Navbar = () => {
       >
         <p
           onClick={() => {
-            if (user?._id) navigate(`/${user?._id}`);
+            if (!user) return;
+            navigate(`/${user._id}`);
           }}
           className="w-full py-3 pl-3 pr-10 hover:bg-[#101010] cursor-pointer"
         >
