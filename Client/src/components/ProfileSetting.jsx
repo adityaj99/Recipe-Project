@@ -15,7 +15,7 @@ const ProfileSetting = () => {
   const { user, setUser } = useAuth();
 
   const [name, setName] = useState(user?.name);
-  const [tag, setTag] = useState(user?.tag || null);
+  const [tag, setTag] = useState(user?.tag);
   const [avatar, setAvatar] = useState(null);
   const [socials, setSocials] = useState({
     facebook: user?.socials?.facebook || "",
