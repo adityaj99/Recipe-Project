@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import Navbar from "../components/Navbar";
 import TrendingNow from "../components/TrendingNow";
 import QuickMeal from "../components/QuickMeal";
@@ -13,74 +15,45 @@ import {
   getRecipesByCurrentSeason,
   getTrendingRecipes,
 } from "../api/recipeApi";
-import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchCurrentSeasonRecipes();
-    fetchFreshRecipes();
-    fetchTrendingRecipes();
-    fetchQuickRecipes();
-    fetchCollections();
-  }, []);
-
-  const [trendingRecipes, setTrendingRecipes] = useState([]);
   const [freshRecipes, setFreshRecipes] = useState([]);
+  const [trendingRecipes, setTrendingRecipes] = useState([]);
   const [quickRecipes, setQuickRecipes] = useState([]);
   const [currentSeasonRecipes, setCurrentSeasonRecipes] = useState([]);
   const [currentSeason, setCurrentSeason] = useState("");
   const [emoji, setEmoji] = useState("");
   const [collections, setCollections] = useState([]);
 
-  const fetchFreshRecipes = async () => {
-    let limit = 4;
-    try {
-      const data = await getAllRecipes(limit);
-      setFreshRecipes(data?.recipes);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [fresh, trending, quick, season, collectionsData] =
+          await Promise.all([
+            getAllRecipes(4),
+            getTrendingRecipes(),
+            getQuickRecipes(),
+            getRecipesByCurrentSeason(),
+            getCollections(),
+          ]);
 
-  const fetchTrendingRecipes = async () => {
-    try {
-      const data = await getTrendingRecipes();
-      setTrendingRecipes(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+        // Set all states in one place — faster & fewer re-renders
+        setFreshRecipes(fresh?.recipes || []);
+        setTrendingRecipes(trending || []);
+        setQuickRecipes(quick || []);
+        setCurrentSeasonRecipes(season?.recipes || []);
+        setCurrentSeason(season?.season || "");
+        setEmoji(season?.emoji || "");
+        setCollections(collectionsData?.collections || []);
+      } catch (err) {
+        console.error("Home page data load failed:", err);
+      }
+    };
 
-  const fetchQuickRecipes = async () => {
-    try {
-      const data = await getQuickRecipes();
-      setQuickRecipes(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const fetchCurrentSeasonRecipes = async () => {
-    try {
-      const data = await getRecipesByCurrentSeason();
-      setCurrentSeasonRecipes(data?.recipes);
-      setCurrentSeason(data?.season);
-      setEmoji(data?.emoji);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const fetchCollections = async () => {
-    try {
-      const data = await getCollections();
-      setCollections(data?.collections);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    loadData();
+  }, []);
 
   const featuredSeasonalRecipe = currentSeasonRecipes?.[0];
 
@@ -97,13 +70,13 @@ const Home = () => {
           />
           <div className="md:absolute md:w-60 lg:w-80 md:left-20 lg:left-50 md:bottom-20 lg:bottom-60">
             <h1 className="text-3xl font-medium lg:text-5xl my-2 uppercase">
-              Explore all time favorite recipies
+              Explore all time favorite recipes
             </h1>
             <p
               onClick={() => navigate("/recipe/all")}
               className="bg-[#F5CE35] text-lg w-fit rounded-sm px-3 py-3 uppercase tracking-wider cursor-pointer hover:bg-[#F5CE35]/80 transition-all duration-300"
             >
-              Explore Recipies
+              Explore Recipes
             </p>
           </div>
         </div>
@@ -111,6 +84,7 @@ const Home = () => {
         {/* divider */}
         <div className="h-8 my-6 bg-[#F3F3F2]"></div>
 
+        {/* Fresh Recipes */}
         <div className="my-8">
           <div className="flex justify-between items-center">
             <h1 className="text-3xl font-medium lg:text-4xl my-4 uppercase">
@@ -120,18 +94,15 @@ const Home = () => {
 
           <div className="flex gap-4 flex-wrap">
             {freshRecipes.length > 0 &&
-              freshRecipes.slice(0, 4).map((recipe) => {
-                return (
-                  <RecipeCard
-                    id={recipe?._id}
-                    title={recipe?.title}
-                    image={recipe?.image?.url}
-                    date={recipe?.createdAt}
-                    key={recipe?._id}
-                  />
-                );
-              })}
-            <div></div>
+              freshRecipes.map((recipe) => (
+                <RecipeCard
+                  id={recipe?._id}
+                  title={recipe?.title}
+                  image={recipe?.image?.url}
+                  date={recipe?.createdAt}
+                  key={recipe?._id}
+                />
+              ))}
           </div>
         </div>
 
@@ -139,28 +110,21 @@ const Home = () => {
         <div className="h-8 my-6 bg-[#F3F3F2]"></div>
 
         {trendingRecipes.length > 0 && (
-          <div className="flex">
-            <TrendingNow trendingRecipes={trendingRecipes} />
-          </div>
+          <TrendingNow trendingRecipes={trendingRecipes} />
         )}
 
-        <div>
-          <RecipeCollectionOne collections={collections} />
-        </div>
+        <RecipeCollectionOne collections={collections} />
 
         {/* divider */}
         <div className="h-8 my-6 bg-[#F3F3F2]"></div>
 
-        {quickRecipes && (
-          <div>
-            <QuickMeal quickRecipes={quickRecipes} />
-          </div>
-        )}
+        {quickRecipes.length > 0 && <QuickMeal quickRecipes={quickRecipes} />}
 
         {/* divider */}
         <div className="h-8 my-6 bg-[#F3F3F2]"></div>
       </div>
 
+      {/* Seasonal Recipes Section */}
       <div>
         {currentSeasonRecipes?.length > 0 && (
           <div className="mt-8 bg-[#F5F7EB] px-40 py-4">
@@ -172,50 +136,50 @@ const Home = () => {
             </h1>
 
             <div className="flex flex-col-reverse md:flex-row gap-10 p-4">
+              {/* Left List */}
               <div className="flex flex-col gap-4 md:w-[80%] xl:w-[40%]">
-                {currentSeasonRecipes.slice(1).map((dish) => {
-                  return (
-                    <div
-                      onClick={() => navigate(`/recipe/${dish?._id}`)}
-                      key={dish?._id}
-                      className="flex gap-4"
-                    >
-                      <img
-                        src={
-                          dish?.image?.url ||
-                          "https://www.allrecipes.com/thmb/RpgGxMqgp34OLykpDCQonZ93Prw=/144x95/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/6714082-0d7b51f14fd24facb47ccef6d2b0d57c.jpg"
-                        }
-                        alt=""
-                        className="w-25 h-30 lg:w-35"
-                      />
-                      <p className="font-semibold text-sm lg:text-lg cursor-pointer hover:underline decoration-[#F5CE35]">
-                        {dish?.title}
-                      </p>
-                    </div>
-                  );
-                })}
+                {currentSeasonRecipes.slice(1).map((dish) => (
+                  <div
+                    onClick={() => navigate(`/recipe/${dish?._id}`)}
+                    key={dish?._id}
+                    className="flex gap-4 cursor-pointer"
+                  >
+                    <img
+                      src={
+                        dish?.image?.url || "https://via.placeholder.com/150"
+                      }
+                      alt=""
+                      className="w-25 h-30 lg:w-35"
+                    />
+                    <p className="font-semibold text-sm lg:text-lg hover:underline decoration-[#F5CE35]">
+                      {dish?.title}
+                    </p>
+                  </div>
+                ))}
               </div>
+
+              {/* Featured image */}
               <div
                 onClick={() =>
                   navigate(`/recipe/${featuredSeasonalRecipe?._id}`)
                 }
-                className="flex flex-col gap-4"
+                className="flex flex-col gap-4 cursor-pointer"
               >
                 <img
-                  className="cursor-pointer"
                   src={
                     featuredSeasonalRecipe?.image?.url ||
-                    "https://imgs.search.brave.com/eJrOBBqXjPdhO8ejCg9Vz4Tkubh4-rLONNGdACLq9vQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9wbHVz/LnVuc3BsYXNoLmNv/bS9wcmVtaXVtX3Zl/Y3Rvci0xNzEzMzY0/MzkzMDg1LTBmZGRh/MTNlYzdjZD9mbT1q/cGcmcT02MCZ3PTMw/MDAmaXhsaWI9cmIt/NC4xLjA"
+                    "https://via.placeholder.com/300"
                   }
                   alt=""
                 />
-                <p className="font-semibold text-3xl cursor-pointer hover:underline decoration-[#F5CE35]">
+                <p className="font-semibold text-3xl hover:underline decoration-[#F5CE35]">
                   {featuredSeasonalRecipe?.title}
                 </p>
               </div>
             </div>
           </div>
         )}
+
         <Footer />
       </div>
     </div>
