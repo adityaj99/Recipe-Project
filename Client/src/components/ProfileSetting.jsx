@@ -106,7 +106,7 @@ const ProfileSetting = () => {
               <textarea
                 name="tag"
                 value={tag}
-                onChange={(e) => setTag(e.target.value || null)}
+                onChange={(e) => setTag(e.target.value)}
                 className="border-1 h-30 border-[#B3B3B2] resize-none p-2"
               />
             </div>
