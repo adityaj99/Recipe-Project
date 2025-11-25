@@ -49,9 +49,6 @@ const Navbar = () => {
       ) {
         setIsNotificationsOpen(false);
       }
-      if (profileRef.current && !profileRef.current.contains(e.target)) {
-        setIsProfileOpen(false);
-      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -229,7 +226,6 @@ const Navbar = () => {
           className="hover:text-[#0EA5E9] cursor-pointer"
         />
         <RiUser3Line
-          ref={profileRef}
           onClick={() => {
             if (user) setIsProfileOpen(!isProfileOpen);
             if (!user) navigate("/login");
