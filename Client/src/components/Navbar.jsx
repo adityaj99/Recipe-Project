@@ -248,6 +248,7 @@ const Navbar = () => {
       </div>
 
       <div
+        ref={profileRef}
         className={`absolute ${
           isProfileOpen && user ? "opacity-100" : "opacity-0 hidden"
         } w-60 flex flex-col border-b-4 border-b-amber-300 transition-all duration-100 ease-in transform items-start text-white pt-1 right-1 xl:right-20 uppercase top-20 bg-black`}
