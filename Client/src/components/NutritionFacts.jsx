@@ -35,8 +35,13 @@ const NutritionFacts = ({ data }) => {
         </div>
       ))}
 
-      <div className="text-xs mt-2">
-        * Percent Daily Values are based on a 2,000 calorie diet.
+      <div className="text-xs mt-4 text-gray-500">
+        <p> * Percent Daily Values are based on a 2,000 calorie diet. </p>
+        <p>
+          {" "}
+          ** Nutrient information is not available for all ingredients. Amount
+          is based on available nutrient data.
+        </p>
       </div>
     </div>
   );

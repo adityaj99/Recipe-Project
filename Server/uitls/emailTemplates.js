@@ -24,6 +24,11 @@ export const recipeApprovedTemplate = ({
                     </p>
                     <p style="font-size: 16px; line-height: 1.6;">
                       It's now live on the platform and ready to inspire food lovers like you. 💛
+                      
+                    </p>
+
+                    <p style="font-size: 16px; line-height: 1.6;">
+                      Now you can add nutrition information to your recipe.
                     </p>
                     <div style="margin: 30px 0; text-align: center;">
                       <a href="${recipeLink}" style="background-color: #e7cba9; color: #4e3d2a; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold;">

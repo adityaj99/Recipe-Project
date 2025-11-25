@@ -22,7 +22,8 @@ const SavedRecipies = () => {
 
   const removeSaved = async (recipeId) => {
     try {
-      const data = await removeSaveRecipe(recipeId);
+      await removeSaveRecipe(recipeId);
+      fetchSavedRecipes();
     } catch (error) {
       console.log(error);
     }
@@ -30,7 +31,7 @@ const SavedRecipies = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="md:sticky top-0 bg-white py-2 text-2xl xl:text-3xl font-bold">
+      <h1 className="md:sticky top-0 bg-white py-2 text-2xl xl:text-3xl font-bold z-10">
         Saved Recipies
       </h1>
       <div className="flex flex-wrap gap-6">
@@ -39,10 +40,13 @@ const SavedRecipies = () => {
             return (
               <div key={dish?._id}>
                 <RecipeCard
+                  key={dish?._id}
                   id={dish?._id}
                   title={dish?.title}
                   image={dish?.image?.url}
                   date={dish?.createdAt}
+                  averageRating={dish?.averageRating}
+                  totalReviews={dish?.totalReviews}
                 />
                 <button
                   onClick={() => removeSaved(dish?._id)}

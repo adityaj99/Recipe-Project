@@ -26,18 +26,21 @@ const PersonalRecipies = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="md:sticky top-0 bg-white py-2 text-2xl xl:text-3xl font-bold">
+      <h1 className="md:sticky top-0 bg-white py-2 text-2xl xl:text-3xl font-bold z-10">
         Personal Recipies
       </h1>
       <div className="flex flex-wrap gap-4">
         {myRecipes?.map((dish) => {
           return (
-            <div className="flex flex-col gap-1 items-end">
+            <div key={dish?._id} className="flex flex-col gap-1 items-end">
               <RecipeCard
+                key={dish?._id}
                 id={dish?._id}
                 title={dish?.title}
                 image={dish?.image?.url}
                 date={dish?.createdAt}
+                averageRating={dish?.averageRating}
+                totalReviews={dish?.totalReviews}
               />
               <p
                 onClick={() => navigate(`/recipe/${dish?._id}/add-nutrition`)}

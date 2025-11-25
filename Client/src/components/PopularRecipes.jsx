@@ -1,11 +1,11 @@
 import RecipeCard from "./RecipeCard";
 
-const QuickMeal = ({ quickRecipes, loading }) => {
+const PopularRecipes = ({ popularRecipes, loading }) => {
   return (
     <div>
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-medium lg:text-4xl my-4 uppercase">
-          Quick Meal
+          Popular Recipes
         </h1>
       </div>
       <div className="flex gap-2 flex-wrap">
@@ -16,7 +16,8 @@ const QuickMeal = ({ quickRecipes, loading }) => {
               className="w-34 min-h-65 md:w-60 xl:w-73 bg-[#F3F3F2] animate-pulse"
             ></div>
           ))}
-        {quickRecipes?.map((dish) => (
+
+        {popularRecipes?.map((dish) => (
           <RecipeCard
             key={dish?._id}
             id={dish?._id}
@@ -32,4 +33,4 @@ const QuickMeal = ({ quickRecipes, loading }) => {
   );
 };
 
-export default QuickMeal;
+export default PopularRecipes;

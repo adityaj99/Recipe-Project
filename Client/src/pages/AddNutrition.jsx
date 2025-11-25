@@ -3,8 +3,9 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import Navbar from "../components/Navbar";
-import { addNutrition } from "../api/recipeApi";
+import { addNutrition, getNutritionInfo } from "../api/recipeApi";
 import { RoundedOneLoader } from "../components/RoundedOneLoader";
+import { useEffect } from "react";
 
 const AddNutrition = () => {
   const { recipeId } = useParams();
@@ -19,6 +20,29 @@ const AddNutrition = () => {
   ]);
 
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchNutrition = async () => {
+      try {
+        const data = await getNutritionInfo(recipeId);
+
+        setFormData({
+          servingsPerContainer: data.servingsPerContainer || "",
+          calories: data.calories || "",
+        });
+
+        setNutrients(
+          data.nutrients?.length
+            ? data.nutrients
+            : [{ label: "", amount: "", dailyValue: "" }]
+        );
+      } catch (error) {
+        return null;
+      }
+    };
+
+    fetchNutrition();
+  }, [recipeId]);
 
   // handle input changes
   const handleChange = (e) => {
@@ -101,7 +125,7 @@ const AddNutrition = () => {
               <input
                 type="number"
                 name="servingsPerContainer"
-                value={formData.servingsPerContainer}
+                value={formData?.servingsPerContainer}
                 onChange={handleChange}
                 placeholder="e.g. 2"
                 className="border px-4 py-2 rounded outline-none"
@@ -113,7 +137,7 @@ const AddNutrition = () => {
               <input
                 type="number"
                 name="calories"
-                value={formData.calories}
+                value={formData?.calories}
                 onChange={handleChange}
                 placeholder="e.g. 250"
                 className="border px-4 py-2 rounded outline-none"
@@ -124,7 +148,7 @@ const AddNutrition = () => {
           {/* Nutrients section */}
           <div className="mt-6">
             <label className="font-semibold text-gray-700">Nutrients</label>
-            {nutrients.map((nutrient, index) => (
+            {nutrients?.map((nutrient, index) => (
               <div
                 key={index}
                 className="grid md:grid-cols-4 gap-3 mt-3 items-start"
@@ -133,7 +157,7 @@ const AddNutrition = () => {
                   type="text"
                   placeholder="Label (e.g. Protein)"
                   className="border px-4 py-2 rounded outline-none"
-                  value={nutrient.label}
+                  value={nutrient?.label}
                   onChange={(e) =>
                     handleNutrientChange(index, "label", e.target.value)
                   }
@@ -142,7 +166,7 @@ const AddNutrition = () => {
                   type="text"
                   placeholder="Amount (e.g. 5g)"
                   className="border px-4 py-2 rounded outline-none"
-                  value={nutrient.amount}
+                  value={nutrient?.amount}
                   onChange={(e) =>
                     handleNutrientChange(index, "amount", e.target.value)
                   }
@@ -151,7 +175,7 @@ const AddNutrition = () => {
                   type="text"
                   placeholder="Daily Value (e.g. 10%)"
                   className="border px-4 py-2 rounded outline-none"
-                  value={nutrient.dailyValue}
+                  value={nutrient?.dailyValue}
                   onChange={(e) =>
                     handleNutrientChange(index, "dailyValue", e.target.value)
                   }
@@ -162,7 +186,7 @@ const AddNutrition = () => {
                   className={`text-red-500 hover:underline text-sm mt-2 md:mt-0 ${
                     nutrients.length <= 1 ? "opacity-30 cursor-not-allowed" : ""
                   }`}
-                  disabled={nutrients.length <= 1}
+                  disabled={nutrients?.length <= 1}
                 >
                   Remove
                 </button>

@@ -79,9 +79,9 @@ export const getSingleRecipe = async (recipeId) => {
   }
 };
 
-export const getAllRecipes = async ({ limit, search }) => {
+export const getAllRecipes = async ({ limit, search, page }) => {
   try {
-    let url = `/recipes?limit=${limit}`;
+    let url = `/recipes?limit=${limit}&page=${page}`;
     if (search) {
       url += `&search=${encodeURIComponent(search)}`;
     }
@@ -234,6 +234,10 @@ export const getNutritionInfo = async (recipeId) => {
     const res = await axiosInstance.get(`/recipes/${recipeId}/nutrition`);
     return res?.data;
   } catch (error) {
+    if (error.response?.status === 404) {
+      return null;
+    }
+
     const message =
       error.response?.data?.message || "Failed to get nutrition. Try again.";
     throw new Error(message);

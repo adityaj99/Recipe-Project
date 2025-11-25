@@ -74,7 +74,7 @@ const AddRecipe = () => {
     { name: "", quantity: "", unit: "" },
     { name: "", quantity: "", unit: "" },
   ]);
-  const [directions, setDirections] = useState(["", "", ""]);
+  const [directions, setDirections] = useState([""]);
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
@@ -120,12 +120,30 @@ const AddRecipe = () => {
     try {
       await addRecipe(formDataWithImage);
       toast.success("Recipe added successfully!");
+      setFormData({
+        title: "",
+        description: "",
+        cookingTime: "",
+        prepTime: "",
+        totalTime: "",
+        tagName: "",
+        cuisines: [],
+        servings: "",
+        notes: "",
+        category: "",
+        seasons: [],
+      });
+      setIngredients([
+        { name: "", quantity: "", unit: "" },
+        { name: "", quantity: "", unit: "" },
+        { name: "", quantity: "", unit: "" },
+      ]);
+      setDirections([""]);
+      setImageFile(null);
+      setImagePreview(null);
     } catch (error) {
       console.error("Error adding recipe:", error);
-      toast.error(
-        error.response?.data?.message ||
-          "Failed to add recipe. Please try again."
-      );
+      toast.error(error?.message || "Failed to add recipe. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -177,7 +195,7 @@ const AddRecipe = () => {
   };
 
   const removeDirectionField = (index) => {
-    if (directions.length > 3) {
+    if (directions.length > 1) {
       const updated = directions.filter((_, i) => i !== index);
       setDirections(updated);
     }
@@ -209,7 +227,7 @@ const AddRecipe = () => {
           </h1>
           <p className="text-gray-600">
             Uploading personal recipes is easy! Add yours to your favorites,
-            share with friends, family, or the Allrecipes community.
+            share with friends, family, or the Savorly community.
           </p>
 
           <div className="h-[1px] bg-[#F3F3F2]"></div>
@@ -402,11 +420,11 @@ const AddRecipe = () => {
                   type="button"
                   onClick={() => removeDirectionField(index)}
                   className={`text-red-500 hover:underline text-sm mt-1 ${
-                    directions.length <= 3
+                    directions.length <= 1
                       ? "opacity-30 cursor-not-allowed"
                       : ""
                   }`}
-                  disabled={directions.length <= 3}
+                  disabled={directions.length <= 1}
                 >
                   Remove
                 </button>
@@ -426,7 +444,7 @@ const AddRecipe = () => {
             <div className="flex flex-col gap-2">
               <label className="font-semibold text-gray-700">Servings</label>
               <input
-                type="number"
+                type="text"
                 placeholder="e.g. 4"
                 className="border px-4 py-2 rounded outline-none"
                 name="servings"
@@ -579,14 +597,14 @@ const AddRecipe = () => {
                 ]);
                 setDirections(["", "", ""]);
               }}
-              className="bg-gray-300 px-6 py-2 rounded hover:bg-gray-400 transition"
+              className="bg-gray-300 px-6 py-2 rounded hover:bg-gray-400 transition cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               onClick={handleFormSubmit}
-              className="bg-[#FFC107] w-35 py-2 rounded font-semibold text-white hover:bg-yellow-500 transition"
+              className="bg-[#FFC107] w-35 py-2 rounded font-semibold text-white hover:bg-yellow-500 transition cursor-pointer"
             >
               {loading ? <RoundedOneLoader /> : "Submit Recipe"}
             </button>

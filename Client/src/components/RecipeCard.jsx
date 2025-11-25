@@ -5,8 +5,20 @@ import { getSingleRecipe, toggleLikeRecipe } from "../api/recipeApi";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
 import { formatDistanceToNow } from "date-fns";
+import {
+  MdOutlineStarPurple500,
+  MdStarBorder,
+  MdStarHalf,
+} from "react-icons/md";
 
-const RecipeCard = ({ id, title, image, date }) => {
+const RecipeCard = ({
+  id,
+  title,
+  image,
+  date,
+  averageRating,
+  totalReviews,
+}) => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -54,8 +66,9 @@ const RecipeCard = ({ id, title, image, date }) => {
 
   return (
     <div
+      // key={keys}
       onClick={() => navigate(`/recipe/${id}`)}
-      className="bg-white h-fit min-h-65 w-34 md:w-50 lg:w-60 xl:w-74 flex flex-col overflow-hidden hover:shadow-[0_8px_20px_rgba(0,0,0,0.2)] transition-shadow duration-300 cursor-pointer"
+      className="bg-white h-fit min-h-65 w-34 md:w-60 lg:w-50 xl:w-73 flex flex-col overflow-hidden hover:shadow-[0_8px_20px_rgba(0,0,0,0.2)] transition-shadow duration-300 cursor-pointer"
     >
       <div className="relative group">
         <div className="w-full h-35 md:h-40 lg:h-44 xl:h-55">
@@ -92,7 +105,7 @@ const RecipeCard = ({ id, title, image, date }) => {
       </div>
 
       <div className="p-4 flex flex-col justify-between flex-1 border-1 border-gray-200">
-        <h3 className="text-sm lg:text-lg font-bold text-gray-800 uppercase mb-1">
+        <h3 className="text-sm lg:text-xl font-bold text-gray-800 uppercase mb-1 line-clamp-1">
           {title || "Lorem ipsum dolor sit amet"}
         </h3>
 
@@ -103,6 +116,39 @@ const RecipeCard = ({ id, title, image, date }) => {
               })
             : "Just now"}
         </p>
+
+        <div className="flex items-center justify-start gap-1">
+          <div className="flex">
+            {Array.from({ length: 5 }, (_, index) => {
+              const ratingVal = averageRating || 0;
+              if (ratingVal >= index + 1) {
+                return (
+                  <MdOutlineStarPurple500
+                    key={index}
+                    className="text-[#F5CE35] text-xs md:text-lg lg:text-2xl"
+                  />
+                );
+              } else if (ratingVal > index && ratingVal < index + 1) {
+                return (
+                  <MdStarHalf
+                    key={index}
+                    className="text-[#F5CE35] text-xs md:text-lg lg:text-2xl"
+                  />
+                );
+              } else {
+                return (
+                  <MdStarBorder
+                    key={index}
+                    className="text-[#F5CE35] text-xs md:text-lg lg:text-2xl"
+                  />
+                );
+              }
+            })}
+          </div>
+          <p className="text-xs lg:text-sm text-gray-400">
+            ({totalReviews || 0})
+          </p>
+        </div>
       </div>
     </div>
   );

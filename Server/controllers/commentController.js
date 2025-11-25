@@ -14,29 +14,31 @@ const addComment = async (req, res) => {
     const isRecipe = await recipeModel.findById(recipeId);
 
     const isAuthorCommented = await commentModel.findOne({
-       user: req.user.userId, 
+      user: req.user.userId,
       recipe: recipeId,
     });
 
     const isUserCommented = await commentModel.findOne({
-       user: userId
-    })
+      user: userId,
+      recipe: recipeId,
+    });
 
-if (
-  isRecipe.author.toString() === req.user.userId.toString() &&
-  isAuthorCommented
-) {
-  return res
-    .status(400)
-    .json({ message: "Author can only add one comment on their own recipe." });
-}
+    if (
+      isRecipe.author.toString() === req.user.userId.toString() &&
+      isAuthorCommented
+    ) {
+      return res
+        .status(400)
+        .json({
+          message: "Author can only add one comment on their own recipe.",
+        });
+    }
 
-if (isUserCommented) {
-  return res
-    .status(400)
-    .json({ message: "You can add only one comment on same." });
-}
-
+    if (isUserCommented) {
+      return res
+        .status(400)
+        .json({ message: "You can add only one comment on same." });
+    }
 
     const comment = await commentModel.create({
       recipe: recipeId,

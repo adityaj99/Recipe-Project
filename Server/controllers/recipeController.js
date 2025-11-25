@@ -24,7 +24,14 @@ const addRecipe = async (req, res) => {
 
     const parsedIngredients =
       typeof ingredients === "string" ? JSON.parse(ingredients) : ingredients;
+
     const parsedSteps = typeof steps === "string" ? JSON.parse(steps) : steps;
+
+    const parsedCuisines =
+      typeof cuisines === "string" ? JSON.parse(cuisines) : cuisines;
+
+    const parsedSeasons =
+      typeof seasons === "string" ? JSON.parse(seasons) : seasons;
 
     if (!title) {
       return res.status(400).json({ message: "Recipe title is required." });
@@ -81,8 +88,8 @@ const addRecipe = async (req, res) => {
       notes,
       image,
       category,
-      cuisines,
-      seasons,
+      cuisines: parsedCuisines,
+      seasons: parsedSeasons,
       prepTime,
       cookingTime,
       totalTime,
@@ -123,13 +130,22 @@ const addNutritionInfo = async (req, res) => {
     const { servingsPerContainer, calories, nutrients, recipeId } = req.body;
 
     const recipe = await recipeModel.findById(recipeId);
-    if (!recipe) return res.status(404).json({ message: "Recipe not found" });
+    if (!recipe) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
 
     const existing = await nutritionFactModel.findOne({ recipe: recipeId });
     if (existing) {
-      return res
-        .status(400)
-        .json({ message: "Nutrition fact already exists for this recipe" });
+      existing.servingsPerContainer = servingsPerContainer;
+      existing.calories = calories;
+      existing.nutrients = nutrients;
+
+      const updated = await existing.save();
+
+      return res.status(200).json({
+        message: "Nutrition fact updated successfully",
+        nutrition: updated,
+      });
     }
 
     const newFact = await nutritionFactModel.create({
@@ -139,12 +155,12 @@ const addNutritionInfo = async (req, res) => {
       recipe: recipeId,
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       message: "Nutrition fact added successfully",
       nutrition: newFact,
     });
   } catch (error) {
-    console.error("Error adding nutrition fact:", error.message);
+    console.error("Error processing nutrition fact:", error.message);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -204,7 +220,7 @@ const getAllRecipes = async (req, res) => {
 
     const recipes = await recipeModel
       .find(query)
-      .select("image title createdAt")
+      .select("image title createdAt averageRating totalReviews")
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(Number(limit));
@@ -229,7 +245,7 @@ const getQuickRecipes = async (req, res) => {
       .find({ status: "approved", totalTime: { $lte: 35 } })
       .select("image title description createdAt")
       .sort({ createdAt: -1 })
-      .limit(10);
+      .limit(4);
 
     res.status(200).json(recipes);
   } catch (error) {
@@ -325,7 +341,8 @@ const getTrendingRecipes = async (req, res) => {
       .find({ isTrending: true, status: "approved" })
       .populate("author", "name avatar")
       .populate("category", "name slug")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .limit(4);
 
     res.status(200).json(trendingRecipes);
   } catch (error) {
@@ -358,7 +375,7 @@ const getPopularRecipes = async (req, res) => {
         $sort: { popularityScore: -1 },
       },
       {
-        $limit: 20,
+        $limit: 8,
       },
     ]);
 
@@ -436,7 +453,7 @@ const getRecipesByCurrentSeason = async (req, res) => {
       })
       .populate("author", "name avatar")
       .populate("category", "name slug")
-      .limit(9);
+      .limit(6);
 
     res.status(200).json({
       season: currentSeason,
@@ -587,7 +604,7 @@ const getRecipesByCategorySlug = async (req, res) => {
     const recipes = await recipeModel
       .find({ category: { $in: categoryIds } })
       .populate("category", "name slug")
-      .select("title image.url")
+      .select("title image.url createdAt averageRating totalReviews")
       .sort({ createdAt: -1 });
 
     return res.status(200).json({

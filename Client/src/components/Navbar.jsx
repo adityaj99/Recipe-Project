@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import {
@@ -24,6 +24,9 @@ const Navbar = () => {
 
   const navigate = useNavigate();
 
+  const profileRef = useRef(null);
+  const notificationsRef = useRef(null);
+
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -38,11 +41,29 @@ const Navbar = () => {
     fetchNotifications();
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        notificationsRef.current &&
+        !notificationsRef.current.contains(e.target)
+      ) {
+        setIsNotificationsOpen(false);
+      }
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setIsProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const fetchNotifications = async () => {
     try {
       const data = await getNotifications();
       setNotifications(
-        data?.notifications.filter((item) => item.isRead !== true),
+        data?.notifications.filter((item) => item.isRead !== true)
       );
     } catch (error) {
       console.error(error);
@@ -71,10 +92,7 @@ const Navbar = () => {
     setOpenSubIndex(openSubIndex === index ? null : index);
   };
 
-  const PremenuItems = [
-    { name: "Popular", link: "/recipe/all" },
-    { name: "About Us", link: "/about" },
-  ];
+  const PremenuItems = [{ name: "About Us", link: "/about" }];
 
   useEffect(() => {
     const handleResize = () => {
@@ -122,7 +140,7 @@ const Navbar = () => {
 
       localStorage.setItem(
         "categoriesCache",
-        JSON.stringify({ timestamp: Date.now(), data: mainMenuItems }),
+        JSON.stringify({ timestamp: Date.now(), data: mainMenuItems })
       );
       setMenuItems(mainMenuItems);
     } catch (error) {
@@ -131,7 +149,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="relative flex items-center z-20 justify-between px-4 lg:px-40 py-4 bg-black">
+    <div className="relative flex items-center z-20 justify-between px-4 lg:px-20 xl:px-40 py-4 bg-black">
       {isMobile && (
         <div onClick={() => setIsMenuOpen(!isMenuOpen)}>
           {isMenuOpen ? (
@@ -144,7 +162,7 @@ const Navbar = () => {
 
       <div
         onClick={() => navigate("/")}
-        className="text-white text-4xl lg:text-5xl font-bold cursor-pointer handwritten"
+        className="text-white text-4xl xl:text-5xl font-bold cursor-pointer handwritten"
       >
         <h1>
           Savorly
@@ -154,7 +172,7 @@ const Navbar = () => {
 
       {!isMobile && (
         <div className="flex gap-6">
-          <div className="relative flex gap-6 text-lg text-white uppercase">
+          <div className="relative flex gap-6 lg:text-sm xl:text-[16px] font-semibold text-white uppercase">
             {menuItems.map((item, index) => (
               <div
                 key={item.name}
@@ -164,14 +182,14 @@ const Navbar = () => {
               >
                 <Link
                   to={item.link}
-                  className="hover:text-[#0EA5E9] cursor-pointer block transition"
+                  className="hover:text-[#FFC107] cursor-pointer block transition"
                 >
                   {item.name}
                 </Link>
 
                 {/* Animated Dropdown */}
                 {hoveredIndex === index && item.children?.length > 0 && (
-                  <div className="absolute top-full left-0  w-48 bg-black py-4 text-white rounded shadow z-20 animate-fadeInSlide">
+                  <div className="absolute top-full left-0 border-b-4 border-b-amber-300  w-60 bg-black py-4 text-white shadow z-20 animate-fadeInSlide">
                     {item.children.map((child) => (
                       <Link
                         key={child.name}
@@ -186,12 +204,12 @@ const Navbar = () => {
               </div>
             ))}
           </div>
-          <div className="relative flex gap-6 text-lg text-white uppercase">
+          <div className="relative flex gap-6 lg:text-sm xl:text-[16px] font-semibold text-white uppercase">
             {PremenuItems.map((item) => (
               <div key={item.name} className="relative">
                 <Link
                   to={item.link}
-                  className="hover:text-[#0EA5E9] cursor-pointer block transition"
+                  className="hover:text-[#FFC107] cursor-pointer block transition"
                 >
                   {item.name}
                 </Link>
@@ -201,7 +219,7 @@ const Navbar = () => {
         </div>
       )}
 
-      <div className="flex items-center text-white text-2xl gap-2">
+      <div className="flex items-center text-white lg:text-lg xl:text-2xl gap-2">
         <RiSearchLine
           onClick={() => navigate(`/recipe/all`)}
           className="hover:text-[#0EA5E9] cursor-pointer"
@@ -211,6 +229,7 @@ const Navbar = () => {
           className="hover:text-[#0EA5E9] cursor-pointer"
         />
         <RiUser3Line
+          ref={profileRef}
           onClick={() => {
             if (user) setIsProfileOpen(!isProfileOpen);
             if (!user) navigate("/login");
@@ -235,7 +254,7 @@ const Navbar = () => {
       <div
         className={`absolute ${
           isProfileOpen && user ? "opacity-100" : "opacity-0 hidden"
-        } flex flex-col transition-all duration-100 ease-in transform items-start text-white pt-1 right-1 xl:right-20 uppercase top-20 bg-black`}
+        } w-60 flex flex-col border-b-4 border-b-amber-300 transition-all duration-100 ease-in transform items-start text-white pt-1 right-1 xl:right-20 uppercase top-20 bg-black`}
       >
         <p
           onClick={() => {
@@ -341,9 +360,10 @@ const Navbar = () => {
       </div>
 
       <div
+        ref={notificationsRef}
         className={`absolute right-0 top-18 lg:top-20 px-1 py-2 w-full md:w-100 max-h-100
     overflow-y-auto text-sm flex flex-col gap-1 bg-black shadow-2xl
-    transform transition-all duration-300 ease-in-out
+    transform transition-all duration-300 ease-in-out border-b-4 border-b-amber-300
     ${
       isNotificationsOpen
         ? "opacity-100 scale-100"

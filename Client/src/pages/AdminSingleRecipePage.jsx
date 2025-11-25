@@ -12,6 +12,7 @@ const AdminSingleRecipePage = () => {
   const [recipe, setRecipe] = useState(null);
   const [formData, setFormData] = useState({});
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchRecipe();
@@ -60,12 +61,15 @@ const AdminSingleRecipePage = () => {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     try {
       await updateRecipeByAdmin(id, formData);
       toast.success("Recipe status updated successfully.!");
     } catch (error) {
       console.error("Error updating recipe:", error);
       toast.error("Failed to update recipe status!");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -236,9 +240,10 @@ const AdminSingleRecipePage = () => {
 
         <button
           onClick={handleSubmit}
-          className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          disabled={loading}
+          className="mt-4 bg-blue-600 text-white w-30 h-10 rounded hover:bg-blue-700 cursor-pointer transition-all duration-200 ease-in-out"
         >
-          Save Changes
+          {loading ? <RoundedOneLoader /> : "Save Changes"}
         </button>
       </div>
     </div>

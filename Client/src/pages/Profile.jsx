@@ -125,7 +125,7 @@ const Profile = () => {
   return (
     <div>
       <Navbar />
-      <div className="max-w-4xl mx-auto px-6 py-20">
+      <div className=" px-4 lg:px-40 py-20">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row items-center md:items-start md:space-x-10">
           {/* Avatar */}
@@ -180,11 +180,12 @@ const Profile = () => {
               )}
             </div>
 
-            {user?.tag && (
-              <div className="py-4 whitespace-pre-line">
-                <p>{user?.tag}</p>
-              </div>
-            )}
+            {user?.tag !== "" ||
+              (user?.tag !== null && (
+                <div className="py-4 whitespace-pre-line">
+                  <p>{user?.tag}</p>
+                </div>
+              ))}
 
             <p className="text-gray-500">{user?.email}</p>
 
@@ -312,26 +313,23 @@ const Profile = () => {
         {/* Divider */}
         <div className="mt-8 border-t" />
 
-        {/* Recipes Placeholder */}
+        {/* Recipes */}
         <div>
-          <h3 className="text-sm font-semibold mb-10 md:text-xl lg:mb-18 py-5">
+          <h3 className="text-sm font-semibold md:text-xl py-5">
             {isSelf ? "Your Recipes" : `${user.name} Recipes`}
           </h3>
-
-          <div className="flex flex-wrap gap-4 pb-10">
+          <div className="w-full flex flex-wrap gap-2">
             {myRecipes.length > 0 ? (
-              myRecipes?.map((recipe, idx) => (
-                <div
-                  key={recipe._id || idx}
-                  className="bg-yellow-100 rounded-lg h-40 flex items-center justify-center text-gray-500"
-                >
-                  <RecipeCard
-                    id={recipe?._id}
-                    title={recipe?.title}
-                    image={recipe?.image?.url}
-                    date={recipe?.createdAt}
-                  />
-                </div>
+              myRecipes?.map((recipe) => (
+                <RecipeCard
+                  key={recipe?._id}
+                  id={recipe?._id}
+                  title={recipe?.title}
+                  image={recipe?.image?.url}
+                  date={recipe?.createdAt}
+                  averageRating={recipe?.averageRating}
+                  totalReviews={recipe?.totalReviews}
+                />
               ))
             ) : (
               <div>No recipes found.</div>

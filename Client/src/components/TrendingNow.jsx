@@ -1,10 +1,6 @@
-import { useNavigate } from "react-router-dom";
 import RecipeCard from "./RecipeCard";
 
-const TrendingNow = ({ trendingRecipes }) => {
-  
-  const navigate = useNavigate();
-
+const TrendingNow = ({ trendingRecipes, loading }) => {
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -12,14 +8,24 @@ const TrendingNow = ({ trendingRecipes }) => {
           Trending Now
         </h1>
       </div>
-      <div className="flex gap-4 flex-wrap">
-        {trendingRecipes.map((dish) => (
+      <div className="flex gap-2 flex-wrap">
+        {loading &&
+          Array.from({ length: 4 }).map((_, index) => (
+            <div
+              key={index}
+              className="w-34 min-h-65 md:w-60 xl:w-73 bg-[#F3F3F2] animate-pulse"
+            ></div>
+          ))}
+
+        {trendingRecipes?.map((dish) => (
           <RecipeCard
+            key={dish?._id}
             id={dish?._id}
             title={dish?.title}
             image={dish?.image?.url}
             date={dish?.createdAt}
-            key={dish?._id}
+            averageRating={dish?.averageRating}
+            totalReviews={dish?.totalReviews}
           />
         ))}
       </div>

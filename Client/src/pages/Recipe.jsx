@@ -232,31 +232,6 @@ const Recipe = () => {
     }
   };
 
-  //dummy.
-  //Nutrition feature not implemented yet.
-  // const nutritionData = {
-  //   servingSize: "1 cup (228g)",
-  //   servingsPerContainer: 2,
-  //   calories: 260,
-  //   caloriesFromFat: 120,
-  //   nutrients: [
-  //     { label: "Total Fat", amount: "14g", dailyValue: "22%" },
-  //     {
-  //       label: "Saturated Fat",
-  //       amount: "5g",
-  //       dailyValue: "25%",
-  //       isSubItem: true,
-  //     },
-  //     { label: "Trans Fat", amount: "0g", isSubItem: true },
-  //     { label: "Cholesterol", amount: "30mg", dailyValue: "10%" },
-  //     { label: "Sodium", amount: "660mg", dailyValue: "28%" },
-  //     { label: "Total Carbohydrate", amount: "31g", dailyValue: "10%" },
-  //     { label: "Dietary Fiber", amount: "0g", isSubItem: true },
-  //     { label: "Sugars", amount: "5g", isSubItem: true },
-  //     { label: "Protein", amount: "5g" },
-  //   ],
-  // };
-
   return (
     <div>
       <Navbar />
@@ -332,7 +307,7 @@ const Recipe = () => {
           </div>
 
           {/* Buttons row */}
-          <div className="flex text-xs md:text-sm lg:w-fit bg-[#F5F7EB] rounded-sm font-bold overflow-y-auto uppercase">
+          <div className="flex text-xs md:text-sm lg:w-fit bg-[#F5F7EB] rounded-sm font-bold overflow-y-auto [&::-webkit-scrollbar]:hidden uppercase">
             <div
               onClick={toggleSave}
               onMouseEnter={() => setHovered(true)}
@@ -498,12 +473,14 @@ const Recipe = () => {
           />
           <RecipeDirections steps={recipe?.steps} notes={recipe?.notes} />
 
-          <p
-            className="cursor-pointer lg:text-xl underline decoration-[#F5CE35] hover:decoration-2"
-            onClick={() => setShow(!show)}
-          >
-            {show ? "Hide Nutrition Information" : "Nutrition Information"}
-          </p>
+          {Object.keys(nutritionData).length > 0 && (
+            <p
+              className="cursor-pointer lg:text-xl underline decoration-[#F5CE35] hover:decoration-2"
+              onClick={() => setShow(!show)}
+            >
+              {show ? "Hide Nutrition Information" : "Nutrition Information"}
+            </p>
+          )}
 
           <div
             className="overflow-hidden transition-all duration-500 ease-in-out"
@@ -512,7 +489,7 @@ const Recipe = () => {
               opacity: show ? 1 : 0,
             }}
           >
-            <NutritionFacts data={nutritionData} />
+            {nutritionData && <NutritionFacts data={nutritionData} />}
           </div>
 
           <div className="mt-8 flex flex-col gap-4">
